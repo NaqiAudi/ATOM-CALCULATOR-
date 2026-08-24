@@ -3,36 +3,164 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cash Counter</title>
+  <title>ATOM Cash Counter</title>
   <style>
-    body { font-family: Arial, sans-serif; background-color: #f4f6f8; margin: 0; padding: 20px; }
-    .container { max-width: 480px; background: white; border-radius: 12px; margin: 0 auto; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-    
-    /* Ruang Logo & Header */
-    .header { text-align: center; border-bottom: 2px solid #eee; padding-bottom: 15px; margin-bottom: 15px; }
-    .brand-logo { max-width: 120px; height: auto; margin-bottom: 8px; }
-    .header h2 { margin: 0; color: #2b7fff; font-size: 20px; }
+    :root {
+      --matcha-dark: #4A5D23;
+      --matcha-primary: #728B36;
+      --matcha-medium: #8A9A5B;
+      --matcha-light: #EBF0DF;
+      --matcha-bg: #F4F7EE;
+      --text-dark: #2C3518;
+    }
 
-    /* Baris Denominasi & Gambar Duit */
-    .row { display: flex; align-items: center; justify-content: space-between; margin: 12px 0; font-size: 16px; font-weight: bold; }
-    .note-img { width: 75px; height: 40px; object-fit: contain; border-radius: 4px; border: 1px solid #ddd; }
-    .row input { width: 70px; padding: 8px; font-size: 16px; text-align: center; border: 1px solid #ccc; border-radius: 6px; }
-    .row .subtotal { width: 110px; text-align: right; color: #333; }
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+      background-color: var(--matcha-bg); 
+      margin: 0; 
+      padding: 15px; 
+      color: var(--text-dark);
+    }
+
+    .container { 
+      max-width: 450px; 
+      background: white; 
+      border-radius: 20px; 
+      margin: 0 auto; 
+      padding: 20px; 
+      box-shadow: 0 10px 25px rgba(74, 93, 35, 0.1); 
+      border: 1px solid var(--matcha-light);
+    }
     
-    .total-box { margin-top: 20px; padding: 15px; background: #eef5ff; border-radius: 8px; text-align: center; }
-    .total-box h2 { margin: 0; color: #1a4a98; font-size: 24px; }
-    .btn-group { display: flex; gap: 10px; margin-top: 20px; }
-    button { flex: 1; padding: 12px; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; color: white; }
-    .btn-clear { background-color: #e74c3c; }
-    .btn-share { background-color: #27ae60; }
+    .header { 
+      text-align: center; 
+      border-bottom: 2px dashed var(--matcha-medium); 
+      padding-bottom: 12px; 
+      margin-bottom: 15px; 
+    }
+
+    .brand-logo { 
+      max-width: 90px; 
+      height: auto; 
+      margin-bottom: 6px; 
+      border-radius: 8px;
+    }
+
+    .header h2 { 
+      margin: 0; 
+      color: var(--matcha-dark); 
+      font-size: 22px; 
+      font-weight: 800; 
+      letter-spacing: 0.5px;
+    }
+
+    .row { 
+      display: flex; 
+      align-items: center; 
+      justify-content: space-between; 
+      margin: 10px 0; 
+      padding: 4px 8px;
+      background: #FAFCF7;
+      border-radius: 10px;
+    }
+    
+    .note-img { 
+      width: 70px; 
+      height: 36px; 
+      object-fit: cover; 
+      border-radius: 6px; 
+      border: 1px solid #D5E0C2; 
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
+    }
+
+    .row input { 
+      width: 75px; 
+      padding: 8px; 
+      font-size: 16px; 
+      text-align: center; 
+      border: 1.5px solid var(--matcha-medium); 
+      border-radius: 8px; 
+      outline: none; 
+      background-color: white;
+      color: var(--text-dark);
+      font-weight: bold;
+    }
+
+    .row input:focus { 
+      border-color: var(--matcha-dark); 
+      box-shadow: 0 0 0 3px rgba(114, 139, 54, 0.2);
+    }
+
+    .row .subtotal { 
+      width: 110px; 
+      text-align: right; 
+      color: var(--matcha-dark); 
+      font-weight: 700; 
+      font-size: 15px; 
+    }
+    
+    .total-box { 
+      margin-top: 20px; 
+      padding: 16px; 
+      background: var(--matcha-light); 
+      border-radius: 14px; 
+      text-align: center; 
+      border: 1px solid #D8E3C3;
+    }
+
+    .total-box span { 
+      color: var(--matcha-dark); 
+      font-size: 14px; 
+      font-weight: 600;
+    }
+
+    .total-box h2 { 
+      margin: 6px 0 0 0; 
+      color: var(--matcha-dark); 
+      font-size: 28px; 
+      font-weight: 800;
+    }
+    
+    .btn-group { 
+      display: flex; 
+      gap: 12px; 
+      margin-top: 20px; 
+    }
+
+    button { 
+      flex: 1; 
+      padding: 12px; 
+      border: none; 
+      border-radius: 10px; 
+      font-size: 16px; 
+      font-weight: bold; 
+      cursor: pointer; 
+      color: white; 
+      transition: all 0.2s ease; 
+    }
+
+    button:active { 
+      transform: scale(0.98); 
+    }
+
+    .btn-clear { 
+      background-color: #D9534F; 
+    }
+
+    .btn-share { 
+      background-color: var(--matcha-primary); 
+    }
+
+    .btn-share:hover {
+      background-color: var(--matcha-dark);
+    }
   </style>
 </head>
 <body>
 
 <div class="container">
   <div class="header">
-    <!-- TUKAR PAUTAN LOGO ANDA DI SINI -->
-    <img src="logo.png" alt="Logo perniagaan" class="brand-logo" onerror="this.style.display='none'">
+    <img src="IMG_1128.jpeg" alt="Logo" class="brand-logo" onerror="this.style.display='none'">
     <h2>Cash Counter (MYR)</h2>
   </div>
 
@@ -41,7 +169,7 @@
   <div class="total-box">
     <span>Jumlah Keseluruhan</span>
     <h2 id="grandTotal">RM 0.00</h2>
-    <small id="timestamp"></small>
+    <small id="timestamp" style="color: #6A7B48; display:block; margin-top:4px; font-weight: 500;"></small>
   </div>
 
   <div class="btn-group">
@@ -51,18 +179,18 @@
 </div>
 
 <script>
-  // Pautan gambar duit sebenar (RM100 hingga 5 sen)
+  // Nama fail disepadankan tepat mengikut fail dalam GitHub anda
   const notes = [
-    { value: 100, img: 'https://upload.wikimedia.org/wikipedia/ms/2/23/RM100_obverse.jpg' },
-    { value: 50,  img: 'https://upload.wikimedia.org/wikipedia/ms/c/c8/RM50_obverse.jpg' },
-    { value: 20,  img: 'https://upload.wikimedia.org/wikipedia/ms/8/87/RM20_obverse.jpg' },
-    { value: 10,  img: 'https://upload.wikimedia.org/wikipedia/ms/2/22/RM10_obverse.jpg' },
-    { value: 5,   img: 'https://upload.wikimedia.org/wikipedia/ms/e/eb/RM5_obverse.jpg' },
-    { value: 1,   img: 'https://upload.wikimedia.org/wikipedia/ms/c/c0/RM1_obverse.jpg' },
-    { value: 0.50, img: 'https://upload.wikimedia.org/wikipedia/commons/2/2d/50_sen_Malaysia_2011_obverse.png' },
-    { value: 0.20, img: 'https://upload.wikimedia.org/wikipedia/commons/d/da/20_sen_Malaysia_2011_obverse.png' },
-    { value: 0.10, img: 'https://upload.wikimedia.org/wikipedia/commons/c/c5/10_sen_Malaysia_2011_obverse.png' },
-    { value: 0.05, img: 'https://upload.wikimedia.org/wikipedia/commons/4/4c/5_sen_Malaysia_2011_obverse.png' }
+    { value: 100, label: 'RM 100', img: 'RM100.jpeg' },
+    { value: 50,  label: 'RM 50',  img: 'RM50.jpeg' },
+    { value: 20,  label: 'RM 20',  img: 'RM20.jpeg' },
+    { value: 10,  label: 'RM 10',  img: 'RM10.jpeg' },
+    { value: 5,   label: 'RM 5',   img: 'RM5.jpeg' },
+    { value: 1,   label: 'RM 1',   img: 'RM1.jpeg' },
+    { value: 0.50, label: '50 sen', img: '50SEN.jpeg' },
+    { value: 0.20, label: '20 sen', img: '20SEN.jpeg' },
+    { value: 0.10, label: '10 sen', img: '10SEN.jpeg' },
+    { value: 0.05, label: '5 sen',  img: '5SEN.jpeg' }
   ];
 
   const container = document.getElementById('denominations');
@@ -71,8 +199,8 @@
     const row = document.createElement('div');
     row.className = 'row';
     row.innerHTML = `
-      <img src="${item.img}" alt="RM ${item.value}" class="note-img">
-      <span>x</span>
+      <img src="${item.img}" alt="${item.label}" class="note-img">
+      <span style="color:#8A9A5B; font-weight:bold;">x</span>
       <input type="number" min="0" id="input-${item.value}" oninput="calculate()" placeholder="0">
       <span class="subtotal" id="sub-${item.value}">= RM 0.00</span>
     `;
@@ -107,8 +235,7 @@
     notes.forEach(item => {
       const qty = document.getElementById(`input-${item.value}`).value || 0;
       if (qty > 0) {
-        const label = item.value >= 1 ? `RM ${item.value}` : `RM ${item.value.toFixed(2)}`;
-        text += `${label} x ${qty} = RM ${(qty * item.value).toFixed(2)}\n`;
+        text += `${item.label} x ${qty} = RM ${(qty * item.value).toFixed(2)}\n`;
       }
     });
     text += "-------------------------\n";
@@ -126,3 +253,4 @@
 
 </body>
 </html>
+
