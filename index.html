@@ -54,6 +54,18 @@
       letter-spacing: 0.5px;
     }
 
+    /* Gaya Kotak Jam Real-Time */
+    .live-clock {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--matcha-dark);
+      margin-top: 6px;
+      background: var(--matcha-light);
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+
     .row { 
       display: flex; 
       align-items: center; 
@@ -150,10 +162,6 @@
     .btn-share { 
       background-color: var(--matcha-primary); 
     }
-
-    .btn-share:hover {
-      background-color: var(--matcha-dark);
-    }
   </style>
 </head>
 <body>
@@ -162,6 +170,8 @@
   <div class="header">
     <img src="IMG_1128.jpeg" alt="Logo" class="brand-logo" onerror="this.style.display='none'">
     <h2>Cash Counter (MYR)</h2>
+    <!-- Paparan Jam Live -->
+    <div id="liveClock" class="live-clock">--:--:--</div>
   </div>
 
   <div id="denominations"></div>
@@ -169,7 +179,6 @@
   <div class="total-box">
     <span>Jumlah Keseluruhan</span>
     <h2 id="grandTotal">RM 0.00</h2>
-    <small id="timestamp" style="color: #6A7B48; display:block; margin-top:4px; font-weight: 500;"></small>
   </div>
 
   <div class="btn-group">
@@ -179,7 +188,6 @@
 </div>
 
 <script>
-  // Nama fail disepadankan tepat mengikut fail dalam GitHub anda
   const notes = [
     { value: 100, label: 'RM 100', img: 'RM100.jpeg' },
     { value: 50,  label: 'RM 50',  img: 'RM50.jpeg' },
@@ -207,6 +215,23 @@
     container.appendChild(row);
   });
 
+  // Fungsi Jam Real-Time (kemaskini setiap 1 saat)
+  function updateClock() {
+    const now = new Date();
+    const options = { 
+      day: 'numeric', 
+      month: 'short', 
+      year: 'numeric', 
+      hour: '2-digit', 
+      minute: '2-digit', 
+      second: '2-digit',
+      hour12: true 
+    };
+    document.getElementById('liveClock').innerText = now.toLocaleString('ms-MY', options);
+  }
+  setInterval(updateClock, 1000);
+  updateClock(); // Jalankan terus bila page buka
+
   function calculate() {
     let grandTotal = 0;
     notes.forEach(item => {
@@ -216,9 +241,6 @@
       document.getElementById(`sub-${item.value}`).innerText = `= RM ${subtotal.toFixed(2)}`;
     });
     document.getElementById('grandTotal').innerText = `RM ${grandTotal.toFixed(2)}`;
-    
-    const now = new Date();
-    document.getElementById('timestamp').innerText = now.toLocaleString('ms-MY');
   }
 
   function clearAll() {
@@ -227,7 +249,6 @@
       document.getElementById(`sub-${item.value}`).innerText = '= RM 0.00';
     });
     document.getElementById('grandTotal').innerText = 'RM 0.00';
-    document.getElementById('timestamp').innerText = '';
   }
 
   function shareData() {
@@ -240,7 +261,7 @@
     });
     text += "-------------------------\n";
     text += `TOTAL: ${document.getElementById('grandTotal').innerText}\n`;
-    text += `Masa: ${document.getElementById('timestamp').innerText}`;
+    text += `Masa Kiraan: ${document.getElementById('liveClock').innerText}`;
 
     if (navigator.share) {
       navigator.share({ title: 'Kiraan Cash', text: text });
@@ -253,4 +274,5 @@
 
 </body>
 </html>
+
 
