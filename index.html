@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cash Counter</title>
+  <style>
+    body { font-family: Arial, sans-serif; background-color: #f4f6f8; margin: 0; padding: 20px; }
+    .container { max-width: 480px; background: white; border-radius: 12px; margin: 0 auto; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    
+    /* Ruang Logo & Header */
+    .header { text-align: center; border-bottom: 2px solid #eee; padding-bottom: 15px; margin-bottom: 15px; }
+    .brand-logo { max-width: 120px; height: auto; margin-bottom: 8px; }
+    .header h2 { margin: 0; color: #2b7fff; font-size: 20px; }
+
+    /* Baris Denominasi & Gambar Duit */
+    .row { display: flex; align-items: center; justify-content: space-between; margin: 12px 0; font-size: 16px; font-weight: bold; }
+    .note-img { width: 75px; height: 40px; object-fit: contain; border-radius: 4px; border: 1px solid #ddd; }
+    .row input { width: 70px; padding: 8px; font-size: 16px; text-align: center; border: 1px solid #ccc; border-radius: 6px; }
+    .row .subtotal { width: 110px; text-align: right; color: #333; }
+    
+    .total-box { margin-top: 20px; padding: 15px; background: #eef5ff; border-radius: 8px; text-align: center; }
+    .total-box h2 { margin: 0; color: #1a4a98; font-size: 24px; }
+    .btn-group { display: flex; gap: 10px; margin-top: 20px; }
+    button { flex: 1; padding: 12px; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; color: white; }
+    .btn-clear { background-color: #e74c3c; }
+    .btn-share { background-color: #27ae60; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <!-- TUKAR PAUTAN LOGO ANDA DI SINI -->
+    <img src="logo.png" alt="Logo perniagaan" class="brand-logo" onerror="this.style.display='none'">
+    <h2>Cash Counter (MYR)</h2>
+  </div>
+
+  <div id="denominations"></div>
+
+  <div class="total-box">
+    <span>Jumlah Keseluruhan</span>
+    <h2 id="grandTotal">RM 0.00</h2>
+    <small id="timestamp"></small>
+  </div>
+
+  <div class="btn-group">
+    <button class="btn-clear" onclick="clearAll()">Clear</button>
+    <button class="btn-share" onclick="shareData()">Share</button>
+  </div>
+</div>
+
+<script>
+  // Pautan gambar duit sebenar (RM100 hingga 5 sen)
+  const notes = [
+    { value: 100, img: 'https://upload.wikimedia.org/wikipedia/ms/2/23/RM100_obverse.jpg' },
+    { value: 50,  img: 'https://upload.wikimedia.org/wikipedia/ms/c/c8/RM50_obverse.jpg' },
+    { value: 20,  img: 'https://upload.wikimedia.org/wikipedia/ms/8/87/RM20_obverse.jpg' },
+    { value: 10,  img: 'https://upload.wikimedia.org/wikipedia/ms/2/22/RM10_obverse.jpg' },
+    { value: 5,   img: 'https://upload.wikimedia.org/wikipedia/ms/e/eb/RM5_obverse.jpg' },
+    { value: 1,   img: 'https://upload.wikimedia.org/wikipedia/ms/c/c0/RM1_obverse.jpg' },
+    { value: 0.50, img: 'https://upload.wikimedia.org/wikipedia/commons/2/2d/50_sen_Malaysia_2011_obverse.png' },
+    { value: 0.20, img: 'https://upload.wikimedia.org/wikipedia/commons/d/da/20_sen_Malaysia_2011_obverse.png' },
+    { value: 0.10, img: 'https://upload.wikimedia.org/wikipedia/commons/c/c5/10_sen_Malaysia_2011_obverse.png' },
+    { value: 0.05, img: 'https://upload.wikimedia.org/wikipedia/commons/4/4c/5_sen_Malaysia_2011_obverse.png' }
+  ];
+
+  const container = document.getElementById('denominations');
+
+  notes.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'row';
+    row.innerHTML = `
+      <img src="${item.img}" alt="RM ${item.value}" class="note-img">
+      <span>x</span>
+      <input type="number" min="0" id="input-${item.value}" oninput="calculate()" placeholder="0">
+      <span class="subtotal" id="sub-${item.value}">= RM 0.00</span>
+    `;
+    container.appendChild(row);
+  });
+
+  function calculate() {
+    let grandTotal = 0;
+    notes.forEach(item => {
+      const qty = parseFloat(document.getElementById(`input-${item.value}`).value) || 0;
+      const subtotal = qty * item.value;
+      grandTotal += subtotal;
+      document.getElementById(`sub-${item.value}`).innerText = `= RM ${subtotal.toFixed(2)}`;
+    });
+    document.getElementById('grandTotal').innerText = `RM ${grandTotal.toFixed(2)}`;
+    
+    const now = new Date();
+    document.getElementById('timestamp').innerText = now.toLocaleString('ms-MY');
+  }
+
+  function clearAll() {
+    notes.forEach(item => {
+      document.getElementById(`input-${item.value}`).value = '';
+      document.getElementById(`sub-${item.value}`).innerText = '= RM 0.00';
+    });
+    document.getElementById('grandTotal').innerText = 'RM 0.00';
+    document.getElementById('timestamp').innerText = '';
+  }
+
+  function shareData() {
+    let text = "=== KIRAAN WANG TUNAI ===\n";
+    notes.forEach(item => {
+      const qty = document.getElementById(`input-${item.value}`).value || 0;
+      if (qty > 0) {
+        const label = item.value >= 1 ? `RM ${item.value}` : `RM ${item.value.toFixed(2)}`;
+        text += `${label} x ${qty} = RM ${(qty * item.value).toFixed(2)}\n`;
+      }
+    });
+    text += "-------------------------\n";
+    text += `TOTAL: ${document.getElementById('grandTotal').innerText}\n`;
+    text += `Masa: ${document.getElementById('timestamp').innerText}`;
+
+    if (navigator.share) {
+      navigator.share({ title: 'Kiraan Cash', text: text });
+    } else {
+      navigator.clipboard.writeText(text);
+      alert("Teks kiraan telah disalin! Boleh paste terus di WhatsApp.");
+    }
+  }
+</script>
+
+</body>
+</html>
