@@ -251,7 +251,15 @@
     document.getElementById('grandTotal').innerText = 'RM 0.00';
   }
 
-  function shareData() {
+  function shareData(platform) {
+    const trelloEmail = "mohdnaqi+bbtemvemk2ujvojxndfw@boards.trello.com";
+
+    const now = new Date();
+    const day = String(now.getDate()).padStart(2, '0');
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const year = String(now.getFullYear()).slice(-2);
+    const formattedDate = `${day}/${month}/${year}`;
+
     let text = "=== KIRAAN WANG TUNAI ===\n";
     notes.forEach(item => {
       const qty = document.getElementById(`input-${item.value}`).value || 0;
@@ -263,16 +271,21 @@
     text += `TOTAL: ${document.getElementById('grandTotal').innerText}\n`;
     text += `Masa Kiraan: ${document.getElementById('liveClock').innerText}`;
 
-    if (navigator.share) {
-      navigator.share({ title: 'Kiraan Cash', text: text });
+    if (platform === 'trello') {
+      const cardTitle = encodeURIComponent(`Cash ${formattedDate}`);
+      const cardDescription = encodeURIComponent(text);
+      window.location.href = `mailto:${trelloEmail}?subject=${cardTitle}&body=${cardDescription}`;
     } else {
-      navigator.clipboard.writeText(text);
-      alert("Teks kiraan telah disalin! Boleh paste terus di WhatsApp.");
+      if (navigator.share) {
+        navigator.share({ title: 'Kiraan Cash', text: text });
+      } else {
+        navigator.clipboard.writeText(text);
+        alert("Teks kiraan telah disalin! Boleh paste terus di WhatsApp.");
+      }
     }
   }
 </script>
 
 </body>
 </html>
-
 
