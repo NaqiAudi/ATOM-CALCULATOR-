@@ -260,20 +260,26 @@
     const year = String(now.getFullYear()).slice(-2);
     const formattedDate = `${day}/${month}/${year}`;
 
-    let text = "=== KIRAAN WANG TUNAI ===\n";
+    // Buat teks penyata kiraan
+    let text = "=== KIRAAN WANG TUNAI ===\n\n";
     notes.forEach(item => {
       const qty = document.getElementById(`input-${item.value}`).value || 0;
       if (qty > 0) {
         text += `${item.label} x ${qty} = RM ${(qty * item.value).toFixed(2)}\n`;
       }
     });
-    text += "-------------------------\n";
+    text += "\n-------------------------\n";
     text += `TOTAL: ${document.getElementById('grandTotal').innerText}\n`;
     text += `Masa Kiraan: ${document.getElementById('liveClock').innerText}`;
 
     if (platform === 'trello') {
+      // Tajuk kad
       const cardTitle = encodeURIComponent(`Cash ${formattedDate}`);
+      
+      // Isi kandungan yang akan terus dimasukkan ke Description kad Trello
       const cardDescription = encodeURIComponent(text);
+
+      // Membuka app e-mel secara format Plain Text
       window.location.href = `mailto:${trelloEmail}?subject=${cardTitle}&body=${cardDescription}`;
     } else {
       if (navigator.share) {
